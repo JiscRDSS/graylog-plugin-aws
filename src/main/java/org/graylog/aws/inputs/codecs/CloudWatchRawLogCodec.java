@@ -27,9 +27,17 @@ public class CloudWatchRawLogCodec extends CloudWatchLogDataCodec {
 
     @Nullable
     @Override
-    public Message decodeLogData(@Nonnull final CloudWatchLogEvent logEvent) {
+    public Message decodeLogData(@Nonnull final CloudWatchLogEvent logEvent, @Nonnull final String logGroup, @Nonnull final String logStream) {
         try {
-            return new Message(logEvent.message, "aws-raw-logs", new DateTime(logEvent.timestamp));
+            final Message result = new Message(
+              logEvent.message,
+              "aws-raw-logs",
+              new DateTime(logEvent.timestamp)
+            );
+            result.addField("aws_log_group", logGroup);
+            result.addField("aws_log_stream", logStream);
+
+            return result;
         } catch (Exception e) {
             throw new RuntimeException("Could not deserialize AWS FlowLog record.", e);
         }

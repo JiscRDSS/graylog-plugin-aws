@@ -37,7 +37,7 @@ public abstract class CloudWatchLogDataCodec implements MultiMessageCodec {
 
             for (final CloudWatchLogEvent logEvent : data.logEvents) {
                 try {
-                    final Message message = decodeLogData(logEvent);
+                    final Message message = decodeLogData(logEvent, data.logGroup, data.logStream);
                     if (message != null) {
                         messages.add(message);
                     }
@@ -53,5 +53,5 @@ public abstract class CloudWatchLogDataCodec implements MultiMessageCodec {
     }
 
     @Nullable
-    protected abstract Message decodeLogData(@Nonnull final CloudWatchLogEvent event);
+    protected abstract Message decodeLogData(@Nonnull final CloudWatchLogEvent event, @Nonnull final String logGroup, @Nonnull final String logStream);
 }
